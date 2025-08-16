@@ -67,3 +67,7 @@ pip-wheel-metadata/
 report.html
 reports/
 junit.xml
+
+# Performance test outputs
+performance_test_results/
+perf_*.csv
