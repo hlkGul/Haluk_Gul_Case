@@ -17,14 +17,14 @@ class BasePage:
 
     def open(self, url: str):
         self.driver.get(url)
-        # Wait for document readiness after navigation
+
         self.wait_document_ready()
-        # Cookie banner varsa kabul et (sessiz)
+
         try:
             self.accept_cookies_if_present()
         except Exception:
             pass
-        # Popup varsa kapatmayı dene (sessizce)
+
         try:
             self.dismiss_ins_popup_if_present()
         except Exception:
@@ -79,7 +79,7 @@ class BasePage:
         )
         return True
 
-    # Yeni: Cookie banner kabul et (wt-cli-accept-all-btn)
+    # Cookie banner kabul et 
     def accept_cookies_if_present(self) -> bool:
         try:
             els = self.driver.find_elements(By.ID, "wt-cli-accept-all-btn")
@@ -99,7 +99,7 @@ class BasePage:
                     self.driver.execute_script("arguments[0].click();", btn)
                 except Exception:
                     return False
-            # Buton kaybolana/görünmez olana kadar kısa bekleme
+
             try:
                 WebDriverWait(self.driver, 5).until(
                     EC.invisibility_of_element_located((By.ID, "wt-cli-accept-all-btn"))
@@ -110,7 +110,7 @@ class BasePage:
         except Exception:
             return False
 
-    # Yeni: Insider responsive popup varsa kapat
+    # Insider responsive popup varsa kapat
     def dismiss_ins_popup_if_present(self) -> bool:
         try:
             banners = self.driver.find_elements(By.ID, "ins-responsive-banner")
@@ -134,7 +134,7 @@ class BasePage:
                     self.driver.execute_script("arguments[0].click();", btn)
                 except Exception:
                     return False
-            # Banner görünmez olana kadar kısa bekleme
+
             try:
                 WebDriverWait(self.driver, 5).until(
                     EC.invisibility_of_element_located((By.ID, "ins-responsive-banner"))

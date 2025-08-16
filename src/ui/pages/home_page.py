@@ -38,7 +38,6 @@ class HomePage(BasePage):
             return False
 
     def go_to_careers(self) -> "CareersPage":
-        # Company üzerine hover, ardından Careers tıkla
         self.hover(self.COMPANY)
         self.click(self.CAREERS)
         from .careers_page import CareersPage  # local import to avoid circular import

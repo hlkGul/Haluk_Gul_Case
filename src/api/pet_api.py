@@ -21,7 +21,7 @@ class PetAPI:
             if last.status_code == 200:
                 return last
             time.sleep(delay)
-        return last  # type: ignore[return-value]
+        return last 
 
     def create(self, payload: dict) -> requests.Response:
         """POST /pet"""
