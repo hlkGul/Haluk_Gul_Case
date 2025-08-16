@@ -13,6 +13,13 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from src.ui.pages import QAPage, OpenPositionsPage
 
+pytestmark = pytest.mark.ui
+
+# Ensure all tests in this folder are marked as 'ui'
+def pytest_collection_modifyitems(config, items):
+    for item in items:
+        if "tests/ui/" in str(item.fspath):
+            item.add_marker(pytest.mark.ui)
 
 def _create_driver(browser: str):
     browser = (browser or "chrome").lower()

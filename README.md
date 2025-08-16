@@ -21,12 +21,16 @@ pip install -r requirements.txt
 ### API Testleri
 ```bash
 python -m pytest -q tests/api -q
+or
+python -m pytest -q -m api
 ```
 
 ### UI Testleri
 Tüm UI testleri:
 ```bash
 python -m pytest -q tests/ui -q
+or 
+python -m pytest -q -m ui
 ```
 Tek bir dosya/tek bir test:
 ```bash

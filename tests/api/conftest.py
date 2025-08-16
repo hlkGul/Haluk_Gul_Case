@@ -3,12 +3,21 @@ import uuid
 import pytest
 from src.api.pet_api import PetAPI
 
+pytestmark = pytest.mark.api
+
+# Mark all tests under tests/api as 'api' so `-m api` selects them
+def pytest_collection_modifyitems(config, items):
+    for item in items:
+        if "tests/api/" in str(item.fspath):
+            item.add_marker(pytest.mark.api)
+
 
 _raw_base = os.getenv("PETSTORE_BASE_URL", "https://petstore.swagger.io/v2").rstrip("/")
 if not _raw_base.endswith("/v2"):
     _raw_base = f"{_raw_base}/v2"
 BASE_URL = _raw_base
 API_KEY = os.getenv("PETSTORE_API_KEY")
+
 
 @pytest.fixture(scope="session")
 def base_url():
