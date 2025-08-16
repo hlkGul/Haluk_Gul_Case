@@ -4,7 +4,7 @@ from src.ui.pages import HomePage
 
 
 def test_home_page_opened(driver):
-    # Visit Insider home and verify
+
     page = HomePage(driver).open()
     assert page.is_opened(), "Insider home page title should contain 'Insider'"
     assert page.has_announce(), "Home page should contain announce element"

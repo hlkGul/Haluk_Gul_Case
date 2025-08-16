@@ -1,7 +1,5 @@
 from __future__ import annotations
-
 from src.ui.pages import OpenPositionsPage
-
 
 def test_view_role_opens_lever(qa_open_positions_filtered):
     opp: OpenPositionsPage = qa_open_positions_filtered
