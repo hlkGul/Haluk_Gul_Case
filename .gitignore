@@ -62,3 +62,8 @@ pip-wheel-metadata/
 
 # Merge leftovers
 *.orig
+
+# Test reports
+report.html
+reports/
+junit.xml

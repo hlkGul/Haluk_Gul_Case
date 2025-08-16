@@ -44,6 +44,13 @@ export HEADLESS=true  # Windows PowerShell: $env:HEADLESS='true'
 python -m pytest -q tests/ui -q
 ```
 
+# API raporu
+python -m pytest -q tests/api --html=api_report.html --self-contained-html
+
+# UI raporu
+python -m pytest -q tests/ui --html=ui_report.html --self-contained-html
+
+
 
 ## Ortam Değişkenleri
 - `HEADLESS`: `true` ise tarayıcı headless açılır.

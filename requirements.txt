@@ -2,3 +2,4 @@ pytest
 requests
 selenium
 webdriver-manager
+pytest-html
