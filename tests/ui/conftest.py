@@ -89,6 +89,6 @@ def qa_open_positions_filtered(driver):
 
     assert opp.filter_by_location(["Istanbul, Turkey", "Istanbul, Turkiye"]), "Select Istanbul failed"
     assert opp.filter_by_department("Quality Assurance"), "Select Department Failed"
-    time.sleep(2)
+    time.sleep(3)
 
     return opp

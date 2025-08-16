@@ -1,6 +1,7 @@
-# Test Insider
+# Test Case 
 
 Python + pytest API ve UI testleri.
+
 
 ## Gereksinimler
 - Python 3.11+ (önerilen)
@@ -18,6 +19,11 @@ pip install -r requirements.txt
 ```
 
 ## Testleri Çalıştırma
+
+## Hızlı Başlangıç (Tüm Testler)
+```bash
+python -m pytest -q
+```
 ### API Testleri
 ```bash
 python -m pytest -q tests/api -q
