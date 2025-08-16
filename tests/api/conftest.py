@@ -20,7 +20,7 @@ def pet_api(base_url):
 
 @pytest.fixture()
 def new_pet_payload():
-    # minimal valid pet payload according to Swagger v2
+
     pet_id = int(uuid.uuid4().int % 1_000_000_000)
     return {
         "id": pet_id,
@@ -38,7 +38,7 @@ def create_pet(pet_api: PetAPI, new_pet_payload):
     created = resp.json()
     yield created
     try:
-        pet_api.delete(created["id"])  # ignore response
+        pet_api.delete(created["id"]) 
     except Exception:
         pass
 

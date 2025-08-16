@@ -1,7 +1,5 @@
 from __future__ import annotations
-
 from src.ui.pages import HomePage
-
 
 def test_home_page_opened(driver):
 

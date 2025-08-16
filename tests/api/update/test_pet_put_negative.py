@@ -29,7 +29,7 @@ def test_update_pet_negative_variants(pet_api, bad_body, headers, expected_statu
         if resp.status_code // 100 == 4:
             assert "message" in data or "type" in data
         elif resp.status_code // 100 == 2:
-            # Başarılı durumda minimal pet doğrulaması
+
             assert "id" in data
             assert isinstance(data.get("photoUrls"), list)
             assert isinstance(data.get("tags"), list)

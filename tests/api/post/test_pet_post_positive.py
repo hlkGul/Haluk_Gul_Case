@@ -11,12 +11,12 @@ def test_create_pet_positive(pet_api):
         "status": "available",
     }
 
-    # Create
+
     resp = pet_api.create(payload)
     assert resp.status_code in (200, 201)
     body = resp.json()
 
-    # Basic validations
+
     assert body["id"] == payload["id"]
     assert body["name"] == payload["name"]
     assert body["status"] == payload["status"]

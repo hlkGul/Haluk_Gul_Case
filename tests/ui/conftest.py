@@ -21,7 +21,7 @@ def _create_driver(browser: str):
         if os.getenv("HEADLESS", "false").lower() == "true":
             options.add_argument("--headless=new")
             options.add_argument("--disable-gpu")
-        # options.add_argument("--window-size=1366,768")  # replaced by maximize
+
         driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
         try:
             driver.maximize_window()
@@ -80,11 +80,8 @@ def qa_open_positions_filtered(driver):
     
     time.sleep(2)
 
-
     assert opp.filter_by_location(["Istanbul, Turkey", "Istanbul, Turkiye"]), "Select Istanbul failed"
 
-
-    # assert opp.filter_by_department("Quality Assurance"), "Select QA department failed"
     time.sleep(3)
 
     return opp
