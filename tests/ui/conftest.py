@@ -71,7 +71,6 @@ def pytest_addoption(parser):
 @pytest.fixture()
 def qa_open_positions_filtered(driver):
     """Common pre-steps: go to QA page, click CTA, ensure Open Positions loaded and apply filters.
-    Basit ve yeniden kullanılabilir.
     """
     qa = QAPage(driver).open()
     assert qa.is_opened(), "QA page should be opened"
@@ -80,13 +79,11 @@ def qa_open_positions_filtered(driver):
     opp = OpenPositionsPage(driver)
     assert opp.is_loaded(), "Filters should load"
 
-    # Department otomatik olarak QA olana kadar metni bekle (dinamik)
+    # Department otomatik olarak QA olana kadar metni bekle 
     WebDriverWait(driver, int(os.getenv("UI_WAIT", "15"))).until(
         EC.text_to_be_present_in_element(OpenPositionsPage.DEPARTMENT_FILTER, "Quality Assurance")
     )
-    
     time.sleep(2)
-
     assert opp.filter_by_location(["Istanbul, Turkey", "Istanbul, Turkiye"]), "Select Istanbul failed"
     assert opp.filter_by_department("Quality Assurance"), "Select Department Failed"
     time.sleep(3)
