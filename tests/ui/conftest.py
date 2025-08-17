@@ -72,6 +72,7 @@ def pytest_addoption(parser):
 def qa_open_positions_filtered(driver):
     """Common pre-steps: go to QA page, click CTA, ensure Open Positions loaded and apply filters.
     """
+
     qa = QAPage(driver).open()
     assert qa.is_opened(), "QA page should be opened"
     assert qa.click_see_all_jobs(), "'See all QA jobs' click failed"
@@ -83,9 +84,12 @@ def qa_open_positions_filtered(driver):
     WebDriverWait(driver, int(os.getenv("UI_WAIT", "15"))).until(
         EC.text_to_be_present_in_element(OpenPositionsPage.DEPARTMENT_FILTER, "Quality Assurance")
     )
-    time.sleep(2)
-    assert opp.filter_by_location(["Istanbul, Turkey", "Istanbul, Turkiye"]), "Select Istanbul failed"
+    # After each filter, wait data-animate-delay + 1 sec
     assert opp.filter_by_department("Quality Assurance"), "Select Department Failed"
-    time.sleep(3)
+    time.sleep(opp.get_filtered_jobs_delay_seconds() + 1.0)
+
+
+    assert opp.filter_by_location(["Istanbul, Turkey", "Istanbul, Turkiye"]), "Select Istanbul failed"
+    time.sleep(opp.get_filtered_jobs_delay_seconds() + 1.0)
 
     return opp

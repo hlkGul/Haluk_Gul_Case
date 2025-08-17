@@ -64,6 +64,20 @@ class OpenPositionsPage(BasePage):
         self.wait_present(self.JOB_LIST)
         return self.driver.find_elements(*self.JOB_ITEMS)
 
+    def get_filtered_jobs_delay_seconds(self) -> float:
+        """Read data-animate-delay from #jobs-list as seconds (numeric). Returns 2.0s as safe default."""
+        try:
+            el = self.driver.find_element(*self.JOB_LIST)
+            val = (
+                el.get_attribute("data-animate-delay")
+                or el.get_attribute("data_animate_delay")
+                or el.get_attribute("data-animated-delay")
+            )
+            v = (str(val).strip() if val is not None else "")
+            return float(v) if v else 2.0
+        except Exception:
+            return 2.0
+
     
     def click_any_view_role_and_verify_new_tab(self) -> bool:
         cards = self.iter_job_cards()
