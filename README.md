@@ -66,7 +66,6 @@ python -m pytest -q --html=report.html --self-contained-html
 ## Performans Testleri (Locust)
 - Senaryo konumu: `tests/performance_tests/n11_basic_search_performance.py`
 - Amaç: n11 ana sayfayı açmak ve basit bir arama (`/arama?q=telefon`) sonucunu listelemek; yalnızca 200 döndüğünü ve içerikte temel işaretlerin bulunduğunu kontrol etmek.
-- Tek kullanıcı yeterlidir (case gereği).
 
 Çalıştırma (web arayüzü ile):
 ```bash
