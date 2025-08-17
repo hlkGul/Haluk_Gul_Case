@@ -58,6 +58,7 @@ class OpenPositionsPage(BasePage):
     def has_job_list(self) -> bool:
         try:
             self.wait_present(self.JOB_LIST)
+            self.log.info("Filtered job list displayed successfully")
             return True
         except TimeoutException:
             return False
@@ -65,6 +66,16 @@ class OpenPositionsPage(BasePage):
     def iter_job_cards(self):
         self.wait_present(self.JOB_LIST)
         return self.driver.find_elements(*self.JOB_ITEMS)
+
+    def get_job_cards_texts(self) -> list[tuple[str, str]]:
+        """Return (department, location) texts for each job card on the page."""
+        self.wait_present(self.JOB_LIST)
+        pairs: list[tuple[str, str]] = []
+        for c in self.driver.find_elements(*self.JOB_ITEMS):
+            dept = c.find_element(*self.ITEM_DEPARTMENT).text.strip()
+            loc = c.find_element(*self.ITEM_LOCATION).text.strip()
+            pairs.append((dept, loc))
+        return pairs
 
     def get_filtered_jobs_delay_seconds(self) -> float:
         """Read data-animate-delay from #jobs-list as seconds (numeric). Returns 2.0s as safe default."""
@@ -85,17 +96,10 @@ class OpenPositionsPage(BasePage):
         if not cards:
             return False
         card = cards[0]
-        try:
-            self.driver.execute_script(
-                "arguments[0].scrollIntoView({block: 'center'});", card
-            )
-        except Exception:
-            pass
-
         original_handles = list(self.driver.window_handles)
         try:
-
-            link = card.find_element(By.CSS_SELECTOR, "a[href*='jobs.lever.co']")
+            # Locate and click the 'View Role' link (opens in new tab)
+            link = card.find_element(*self.VIEW_ROLE_BTN)
             try:
                 self.driver.execute_script(
                     "arguments[0].scrollIntoView({block: 'center'});", link
@@ -104,22 +108,22 @@ class OpenPositionsPage(BasePage):
                 pass
             try:
                 link.click()
+                self.log.info("Clicking view role button")
             except Exception:
                 self.driver.execute_script("arguments[0].click();", link)
 
-            # Yeni sekme açılmasını ya da mevcut sekmede Lever URL’e gitmesini bekle
+            # Wait for new tab to open and switch to it
             WebDriverWait(self.driver, self.timeout).until(
                 lambda d: len(d.window_handles) > len(original_handles)
-                or d.current_url.startswith("https://jobs.lever.co/")
             )
-            if len(self.driver.window_handles) > len(original_handles):
-                new_handle = next(
-                    h for h in self.driver.window_handles if h not in original_handles
-                )
-                self.driver.switch_to.window(new_handle)
+            new_handle = next(
+                h for h in self.driver.window_handles if h not in original_handles
+            )
+            self.driver.switch_to.window(new_handle)
 
+            # Optionally verify redirected domain
             WebDriverWait(self.driver, self.timeout).until(
-                lambda d: d.current_url.startswith("https://jobs.lever.co/")
+                lambda d: "jobs.lever.co" in d.current_url
             )
             return True
         except TimeoutException:
