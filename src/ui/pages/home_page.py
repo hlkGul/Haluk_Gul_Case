@@ -40,5 +40,5 @@ class HomePage(BasePage):
     def go_to_careers(self) -> "CareersPage":
         self.hover(self.COMPANY)
         self.click(self.CAREERS)
-        from .careers_page import CareersPage  # local import to avoid circular import
+        from .careers_page import CareersPage  
         return CareersPage(self.driver)

@@ -7,7 +7,6 @@ from .base_page import BasePage
 
 class CareersPage(BasePage):
     URL_KEY = "careers"
-
     LOCATIONS = (By.ID, "career-our-location")
     TEAMS = (By.ID, "career-find-our-calling")
     LIFE_AT_INSIDER = (By.XPATH, '//section[@data-id="a8e7b90"]')
