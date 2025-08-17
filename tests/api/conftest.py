@@ -1,9 +1,17 @@
 import os
+import logging
 import uuid
 import pytest
 from src.api.pet_api import PetAPI
 
 pytestmark = pytest.mark.api
+
+
+def pytest_sessionstart(session):
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
+    )
 
 
 # Mark all tests under tests/api as 'api' so `-m api` selects them
