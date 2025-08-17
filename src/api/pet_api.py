@@ -23,6 +23,10 @@ class PetAPI:
             time.sleep(delay)
         return last 
 
+    def find_by_status(self, status: str) -> requests.Response:
+        """GET /pet/findByStatus"""
+        return requests.get(f"{self.base}/pet/findByStatus", params={"status": status})
+
     def create(self, payload: dict) -> requests.Response:
         """POST /pet"""
         return requests.post(f"{self.base}/pet", json=payload)

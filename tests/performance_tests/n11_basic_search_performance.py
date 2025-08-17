@@ -19,6 +19,7 @@ class N11SearchUser(HttpUser):
                 r_home.failure(f"Unexpected status: {r_home.status_code}")
                 return
 
+        # to do: query parametry env den oku
         query = "telefon"
         with self.client.get("/arama", params={"q": query}, name="/arama", catch_response=True) as r_search:
             if r_search.status_code != 200:
