@@ -16,6 +16,7 @@ class OpenPositionsPage(BasePage):
     ITEM_DEPARTMENT = (By.CSS_SELECTOR, ".position-department")
     ITEM_LOCATION = (By.CSS_SELECTOR, ".position-location")
     VIEW_ROLE_BTN = (By.CSS_SELECTOR, "a.btn.btn-navy[target='_blank']")
+    OPTION_ROLE = (By.XPATH, "//li[@role='option']")
 
     def is_loaded(self) -> bool:
         try:
@@ -34,7 +35,7 @@ class OpenPositionsPage(BasePage):
                 return False
 
             WebDriverWait(self.driver, self.timeout).until(
-                EC.presence_of_element_located((By.XPATH, "//li[@role='option']"))
+                EC.presence_of_element_located(self.OPTION_ROLE)
             )
 
             option_el = WebDriverWait(self.driver, self.timeout).until(
