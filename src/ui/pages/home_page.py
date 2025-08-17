@@ -33,13 +33,16 @@ class HomePage(BasePage):
         """Return True if the announce element is visible, False otherwise."""
         try:
             self.wait_visible(self.ANNOUNCE)
+            self.log.info("Homepage opened succesfully")
             return True
         except TimeoutException:
             return False
 
     def go_to_careers(self) -> "CareersPage":
         self.hover(self.COMPANY)
+        self.log.info("Hovered Company area")
         self.click(self.CAREERS)
+        self.log.info("Clicked Careers")
         from .careers_page import CareersPage
 
         return CareersPage(self.driver)

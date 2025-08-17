@@ -21,4 +21,10 @@ class QAPage(BasePage):
         return self.URL_KEY in (self.driver.current_url or "")
 
     def click_see_all_jobs(self) -> bool:
-        return self.click(self.SEE_ALL_JOBS)
+        self.log.info("Click: See all QA jobs")
+        ok = self.click(self.SEE_ALL_JOBS)
+        if ok:
+            self.log.info("Clicked: See all QA jobs")
+        else:
+            self.log.warning("Click failed: See all QA jobs")
+        return ok

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import logging
 from typing import Tuple
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.common.action_chains import ActionChains
@@ -18,8 +19,10 @@ class BasePage:
     def __init__(self, driver: WebDriver):
         self.driver = driver
         self.timeout = int(os.getenv("UI_WAIT", "15"))
+        self.log = logging.getLogger(self.__class__.__name__)
 
     def open(self, url: str):
+        self.log.info("Open URL: %s", url)
         self.driver.get(url)
 
         self.wait_document_ready()
@@ -72,13 +75,17 @@ class BasePage:
         except ElementClickInterceptedException:
             if js_fallback:
                 try:
+                    self.log.info("Click intercepted, trying JS click: %s", locator)
                     el = self.wait_present(locator)
                     self.driver.execute_script("arguments[0].click();", el)
+                    self.log.info("JS clicked: %s", locator)
                     return True
                 except Exception:
+                    self.log.warning("JS click failed: %s", locator)
                     return False
             return False
         except (TimeoutException, ElementNotInteractableException):
+            self.log.warning("Click failed (timeout/not interactable): %s", locator)
             return False
 
     def wait_document_ready(self) -> bool:
@@ -96,6 +103,7 @@ class BasePage:
             btn = els[0]
             if not btn.is_displayed():
                 return False
+            self.log.info("Cookie banner detected, accepting")
             try:
                 self.driver.execute_script(
                     "arguments[0].scrollIntoView({block: 'center'});", btn
@@ -108,6 +116,7 @@ class BasePage:
                 try:
                     self.driver.execute_script("arguments[0].click();", btn)
                 except Exception:
+                    self.log.warning("Cookie accept failed")
                     return False
 
             try:
@@ -129,6 +138,7 @@ class BasePage:
             banner = banners[0]
             if not banner.is_displayed():
                 return False
+            self.log.info("INS popup detected, closing")
             close_buttons = self.driver.find_elements(
                 By.CSS_SELECTOR, "span.ins-close-button"
             )
@@ -147,6 +157,7 @@ class BasePage:
                 try:
                     self.driver.execute_script("arguments[0].click();", btn)
                 except Exception:
+                    self.log.warning("INS popup close failed")
                     return False
 
             try:
@@ -155,6 +166,7 @@ class BasePage:
                 )
             except Exception:
                 pass
+            self.log.info("INS popup closed")
             return True
         except Exception:
             return False

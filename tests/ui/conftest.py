@@ -1,4 +1,5 @@
 import os
+import logging
 import pytest
 import time
 from selenium import webdriver
@@ -15,6 +16,10 @@ from src.ui.pages import QAPage, OpenPositionsPage
 
 pytestmark = pytest.mark.ui
 
+logging.getLogger("WDM").setLevel(logging.WARNING)
+logging.getLogger("webdriver_manager").setLevel(logging.WARNING)
+log = logging.getLogger("UI")
+
 
 # Ensure all tests in this folder are marked as 'ui'
 def pytest_collection_modifyitems(config, items):
@@ -25,9 +30,11 @@ def pytest_collection_modifyitems(config, items):
 
 def _create_driver(browser: str):
     browser = (browser or "chrome").lower()
+    headless = os.getenv("HEADLESS", "false").lower() == "true"
     if browser == "chrome":
+        log.info("Creating Chrome driver (headless=%s)", headless)
         options = ChromeOptions()
-        if os.getenv("HEADLESS", "false").lower() == "true":
+        if headless:
             options.add_argument("--headless=new")
             options.add_argument("--disable-gpu")
 
@@ -40,8 +47,9 @@ def _create_driver(browser: str):
             pass
         return driver
     elif browser == "firefox":
+        log.info("Creating Firefox driver (headless=%s)", headless)
         options = FirefoxOptions()
-        if os.getenv("HEADLESS", "false").lower() == "true":
+        if headless:
             options.add_argument("-headless")
         driver = webdriver.Firefox(
             service=FirefoxService(GeckoDriverManager().install()), options=options
@@ -62,9 +70,11 @@ def browser_name(pytestconfig):
 
 @pytest.fixture()
 def driver(browser_name):
+    log.info("Starting driver for browser=%s", browser_name)
     drv = _create_driver(browser_name)
     yield drv
     try:
+        log.info("Quitting driver")
         drv.quit()
     except Exception:
         pass
@@ -82,7 +92,7 @@ def pytest_addoption(parser):
 @pytest.fixture()
 def qa_open_positions_filtered(driver):
     """Common pre-steps: go to QA page, click CTA, ensure Open Positions loaded and apply filters."""
-
+    log.info("Opening QA page and navigating to Open Positions")
     qa = QAPage(driver).open()
     assert qa.is_opened(), "QA page should be opened"
     assert qa.click_see_all_jobs(), "'See all QA jobs' click failed"
@@ -97,9 +107,11 @@ def qa_open_positions_filtered(driver):
         )
     )
     # After each filter, wait data-animate-delay + 1 sec
+    log.info("Filtering by Department: Quality Assurance")
     assert opp.filter_by_department("Quality Assurance"), "Select Department Failed"
     time.sleep(opp.get_filtered_jobs_delay_seconds() + 1.0)
 
+    log.info("Filtering by Location: Istanbul")
     assert opp.filter_by_location(
         ["Istanbul, Turkey", "Istanbul, Turkiye"]
     ), "Select Istanbul failed"
