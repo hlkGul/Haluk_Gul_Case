@@ -9,4 +9,6 @@ def test_visit_careers_and_blocks(driver):
 
     assert careers.is_opened(), "Careers page should be opened (URL contains 'careers')"
 
-    assert careers.blocks_visible(), "Locations, Teams, Life at Insider blocks should be visible"
+    assert (
+        careers.blocks_visible()
+    ), "Locations, Teams, Life at Insider blocks should be visible"

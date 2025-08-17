@@ -1,7 +1,9 @@
 import pytest
 
 
-@pytest.mark.parametrize("status", ["available", "pending", "sold"], ids=["available", "pending", "sold"])
+@pytest.mark.parametrize(
+    "status", ["available", "pending", "sold"], ids=["available", "pending", "sold"]
+)
 def test_find_by_status_basic(pet_api, status):
     resp = pet_api.find_by_status(status)
     assert resp.status_code == 200
@@ -10,11 +12,6 @@ def test_find_by_status_basic(pet_api, status):
     data = resp.json()
     assert isinstance(data, list)
     if data and isinstance(data[0], dict) and "status" in data[0]:
-        assert all(item.get("status") == status for item in data if isinstance(item, dict))
-
-
-
-
-
-
-
+        assert all(
+            item.get("status") == status for item in data if isinstance(item, dict)
+        )

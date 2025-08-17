@@ -25,7 +25,9 @@ class OpenPositionsPage(BasePage):
         except TimeoutException:
             return False
 
-    def _select2_select(self, trigger_locator: tuple[str, str], option_xpath: str) -> bool:
+    def _select2_select(
+        self, trigger_locator: tuple[str, str], option_xpath: str
+    ) -> bool:
         try:
 
             if not self.click(trigger_locator):
@@ -73,19 +75,20 @@ class OpenPositionsPage(BasePage):
                 or el.get_attribute("data_animate_delay")
                 or el.get_attribute("data-animated-delay")
             )
-            v = (str(val).strip() if val is not None else "")
+            v = str(val).strip() if val is not None else ""
             return float(v) if v else 2.0
         except Exception:
             return 2.0
 
-    
     def click_any_view_role_and_verify_new_tab(self) -> bool:
         cards = self.iter_job_cards()
         if not cards:
             return False
         card = cards[0]
         try:
-            self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", card)
+            self.driver.execute_script(
+                "arguments[0].scrollIntoView({block: 'center'});", card
+            )
         except Exception:
             pass
 
@@ -94,7 +97,9 @@ class OpenPositionsPage(BasePage):
 
             link = card.find_element(By.CSS_SELECTOR, "a[href*='jobs.lever.co']")
             try:
-                self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", link)
+                self.driver.execute_script(
+                    "arguments[0].scrollIntoView({block: 'center'});", link
+                )
             except Exception:
                 pass
             try:
@@ -104,10 +109,13 @@ class OpenPositionsPage(BasePage):
 
             # Yeni sekme açılmasını ya da mevcut sekmede Lever URL’e gitmesini bekle
             WebDriverWait(self.driver, self.timeout).until(
-                lambda d: len(d.window_handles) > len(original_handles) or d.current_url.startswith("https://jobs.lever.co/")
+                lambda d: len(d.window_handles) > len(original_handles)
+                or d.current_url.startswith("https://jobs.lever.co/")
             )
             if len(self.driver.window_handles) > len(original_handles):
-                new_handle = next(h for h in self.driver.window_handles if h not in original_handles)
+                new_handle = next(
+                    h for h in self.driver.window_handles if h not in original_handles
+                )
                 self.driver.switch_to.window(new_handle)
 
             WebDriverWait(self.driver, self.timeout).until(
@@ -118,4 +126,3 @@ class OpenPositionsPage(BasePage):
             return False
         except Exception:
             return False
-

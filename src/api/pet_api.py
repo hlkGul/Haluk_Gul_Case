@@ -13,7 +13,9 @@ class PetAPI:
     def _auth_headers(self) -> dict:
         return {"api_key": self.api_key} if self.api_key else {}
 
-    def get(self, pet_id: int, retries: int = 6, delay: float = 0.5) -> requests.Response:
+    def get(
+        self, pet_id: int, retries: int = 6, delay: float = 0.5
+    ) -> requests.Response:
         """GET /pet/{id} with small retry for public demo flakiness"""
         last: Optional[requests.Response] = None
         for _ in range(retries):
@@ -21,7 +23,7 @@ class PetAPI:
             if last.status_code == 200:
                 return last
             time.sleep(delay)
-        return last 
+        return last
 
     def find_by_status(self, status: str) -> requests.Response:
         """GET /pet/findByStatus"""
@@ -31,7 +33,9 @@ class PetAPI:
         """POST /pet"""
         return requests.post(f"{self.base}/pet", json=payload)
 
-    def create_raw(self, body: str | bytes, headers: Optional[dict] = None) -> requests.Response:
+    def create_raw(
+        self, body: str | bytes, headers: Optional[dict] = None
+    ) -> requests.Response:
         """POST /pet with custom body/headers (for negative tests such as wrong Content-Type)."""
         return requests.post(f"{self.base}/pet", data=body, headers=headers or {})
 
@@ -39,10 +43,14 @@ class PetAPI:
         """PUT /pet"""
         return requests.put(f"{self.base}/pet", json=payload)
 
-    def update_raw(self, body: str | bytes, headers: Optional[dict] = None) -> requests.Response:
+    def update_raw(
+        self, body: str | bytes, headers: Optional[dict] = None
+    ) -> requests.Response:
         """PUT /pet with custom body/headers (for negative tests)."""
         return requests.put(f"{self.base}/pet", data=body, headers=headers or {})
 
     def delete(self, pet_id: int) -> requests.Response:
         """DELETE /pet/{id}"""
-        return requests.delete(f"{self.base}/pet/{pet_id}", headers=self._auth_headers())
+        return requests.delete(
+            f"{self.base}/pet/{pet_id}", headers=self._auth_headers()
+        )

@@ -1,5 +1,6 @@
 import pytest
 
+
 @pytest.mark.parametrize("pet_id", [1])
 def test_get_pet_by_id_parametric(pet_api, pet_id):
 
@@ -11,4 +12,3 @@ def test_get_pet_by_id_parametric(pet_api, pet_id):
     assert "id" in body
     assert "name" in body
     assert "status" in body
-

@@ -7,7 +7,11 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException, ElementClickInterceptedException, ElementNotInteractableException
+from selenium.common.exceptions import (
+    TimeoutException,
+    ElementClickInterceptedException,
+    ElementNotInteractableException,
+)
 
 
 class BasePage:
@@ -51,14 +55,18 @@ class BasePage:
         ActionChains(self.driver).move_to_element(elem).perform()
         return elem
 
-    def click(self, locator: Tuple[str, str], scroll: bool = True, js_fallback: bool = True) -> bool:
+    def click(
+        self, locator: Tuple[str, str], scroll: bool = True, js_fallback: bool = True
+    ) -> bool:
         """Safe click helper: waits clickable, optionally scrolls into view, tries JS click if intercepted.
         Returns True on success, False otherwise.
         """
         try:
             el = self.wait_clickable(locator)
             if scroll:
-                self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", el)
+                self.driver.execute_script(
+                    "arguments[0].scrollIntoView({block: 'center'});", el
+                )
             el.click()
             return True
         except ElementClickInterceptedException:
@@ -79,7 +87,7 @@ class BasePage:
         )
         return True
 
-    # Cookie banner kabul et 
+    # Cookie banner kabul et
     def accept_cookies_if_present(self) -> bool:
         try:
             els = self.driver.find_elements(By.ID, "wt-cli-accept-all-btn")
@@ -89,7 +97,9 @@ class BasePage:
             if not btn.is_displayed():
                 return False
             try:
-                self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", btn)
+                self.driver.execute_script(
+                    "arguments[0].scrollIntoView({block: 'center'});", btn
+                )
             except Exception:
                 pass
             try:
@@ -119,12 +129,16 @@ class BasePage:
             banner = banners[0]
             if not banner.is_displayed():
                 return False
-            close_buttons = self.driver.find_elements(By.CSS_SELECTOR, "span.ins-close-button")
+            close_buttons = self.driver.find_elements(
+                By.CSS_SELECTOR, "span.ins-close-button"
+            )
             if not close_buttons:
                 return False
             btn = close_buttons[0]
             try:
-                self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", btn)
+                self.driver.execute_script(
+                    "arguments[0].scrollIntoView({block: 'center'});", btn
+                )
             except Exception:
                 pass
             try:

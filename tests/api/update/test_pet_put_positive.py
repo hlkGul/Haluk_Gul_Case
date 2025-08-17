@@ -21,8 +21,9 @@ def test_update_pet_positive(pet_api):
         assert updated.get("name") == payload["name"]
         assert updated.get("status") == payload["status"]
 
+
 def test_update_pet_idempotent_payload(pet_api, new_pet_payload):
-    
+
     create_resp = pet_api.create(new_pet_payload)
     assert create_resp.status_code in (200, 201)
 

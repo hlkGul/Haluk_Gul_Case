@@ -5,11 +5,8 @@ import pytest
 @pytest.mark.parametrize(
     "bad_body, headers, expected_status",
     [
-
         ("{bad json", {"Content-Type": "application/json"}, 400),
-
         (json.dumps({"id": 0, "name": "bad"}), {"Content-Type": "text/plain"}, 415),
-
         (json.dumps({"id": 0}), {"Content-Type": "application/json"}, 400),
     ],
 )

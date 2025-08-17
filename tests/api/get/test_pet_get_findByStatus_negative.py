@@ -1,5 +1,6 @@
 import pytest
 
+
 def test_find_by_status_invalid_value(pet_api):
     resp = pet_api.find_by_status("unknownState")
     assert resp.status_code // 100 in (2, 4, 5)

@@ -11,11 +11,9 @@ def test_create_pet_positive(pet_api):
         "status": "available",
     }
 
-
     resp = pet_api.create(payload)
     assert resp.status_code in (200, 201)
     body = resp.json()
-
 
     assert body["id"] == payload["id"]
     assert body["name"] == payload["name"]
@@ -24,5 +22,5 @@ def test_create_pet_positive(pet_api):
     assert isinstance(body.get("category"), dict)
     assert isinstance(body.get("tags"), list)
 
-    del_resp = pet_api.delete(payload["id"])  
+    del_resp = pet_api.delete(payload["id"])
     assert del_resp.status_code in (200, 404)

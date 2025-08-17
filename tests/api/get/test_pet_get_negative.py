@@ -1,5 +1,6 @@
 import pytest
 
+
 @pytest.mark.parametrize("pet_id", [111111])
 def test_get_pet_by_id_not_found(pet_api, pet_id):
 
@@ -14,6 +15,7 @@ def test_get_pet_by_id_not_found(pet_api, pet_id):
     if "application/json" in ctype:
         data = resp.json()
         assert data.get("message") == "Pet not found"
+
 
 @pytest.mark.parametrize("pet_id", ["abc"])
 def test_get_pet_by_id_invalid_format_negative(pet_api, pet_id):

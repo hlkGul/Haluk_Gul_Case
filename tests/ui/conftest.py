@@ -15,11 +15,13 @@ from src.ui.pages import QAPage, OpenPositionsPage
 
 pytestmark = pytest.mark.ui
 
+
 # Ensure all tests in this folder are marked as 'ui'
 def pytest_collection_modifyitems(config, items):
     for item in items:
         if "tests/ui/" in str(item.fspath):
             item.add_marker(pytest.mark.ui)
+
 
 def _create_driver(browser: str):
     browser = (browser or "chrome").lower()
@@ -29,7 +31,9 @@ def _create_driver(browser: str):
             options.add_argument("--headless=new")
             options.add_argument("--disable-gpu")
 
-        driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
+        driver = webdriver.Chrome(
+            service=ChromeService(ChromeDriverManager().install()), options=options
+        )
         try:
             driver.maximize_window()
         except Exception:
@@ -39,7 +43,9 @@ def _create_driver(browser: str):
         options = FirefoxOptions()
         if os.getenv("HEADLESS", "false").lower() == "true":
             options.add_argument("-headless")
-        driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()), options=options)
+        driver = webdriver.Firefox(
+            service=FirefoxService(GeckoDriverManager().install()), options=options
+        )
         try:
             driver.maximize_window()
         except Exception:
@@ -65,13 +71,17 @@ def driver(browser_name):
 
 
 def pytest_addoption(parser):
-    parser.addoption("--browser", action="store", default=os.getenv("BROWSER", "chrome"), help="chrome or firefox")
+    parser.addoption(
+        "--browser",
+        action="store",
+        default=os.getenv("BROWSER", "chrome"),
+        help="chrome or firefox",
+    )
 
 
 @pytest.fixture()
 def qa_open_positions_filtered(driver):
-    """Common pre-steps: go to QA page, click CTA, ensure Open Positions loaded and apply filters.
-    """
+    """Common pre-steps: go to QA page, click CTA, ensure Open Positions loaded and apply filters."""
 
     qa = QAPage(driver).open()
     assert qa.is_opened(), "QA page should be opened"
@@ -80,16 +90,19 @@ def qa_open_positions_filtered(driver):
     opp = OpenPositionsPage(driver)
     assert opp.is_loaded(), "Filters should load"
 
-    # Department otomatik olarak QA olana kadar metni bekle 
+    # Department otomatik olarak QA olana kadar metni bekle
     WebDriverWait(driver, int(os.getenv("UI_WAIT", "15"))).until(
-        EC.text_to_be_present_in_element(OpenPositionsPage.DEPARTMENT_FILTER, "Quality Assurance")
+        EC.text_to_be_present_in_element(
+            OpenPositionsPage.DEPARTMENT_FILTER, "Quality Assurance"
+        )
     )
     # After each filter, wait data-animate-delay + 1 sec
     assert opp.filter_by_department("Quality Assurance"), "Select Department Failed"
     time.sleep(opp.get_filtered_jobs_delay_seconds() + 1.0)
 
-
-    assert opp.filter_by_location(["Istanbul, Turkey", "Istanbul, Turkiye"]), "Select Istanbul failed"
+    assert opp.filter_by_location(
+        ["Istanbul, Turkey", "Istanbul, Turkiye"]
+    ), "Select Istanbul failed"
     time.sleep(opp.get_filtered_jobs_delay_seconds() + 1.0)
 
     return opp

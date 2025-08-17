@@ -6,12 +6,10 @@ import pytest
     "bad_body, headers, expected_status",
     [
         ("{bad json", {"Content-Type": "application/json"}, 400),
-
         (json.dumps({"id": 999, "name": "bad"}), {"Content-Type": "text/plain"}, 415),
-
         (json.dumps({"id": 999}), {"Content-Type": "application/json"}, 400),
     ],
-        ids=["malformed_json", "wrong_content_type", "missing_fields"],
+    ids=["malformed_json", "wrong_content_type", "missing_fields"],
 )
 def test_create_pet_negative_variants(pet_api, bad_body, headers, expected_status):
     resp = pet_api.create_raw(bad_body, headers=headers)
@@ -59,6 +57,7 @@ def test_create_pet_duplicate_id_behavior(pet_api):
     cleanup = pet_api.delete(pet_id)
     assert cleanup.status_code in (200, 404)
 
+
 def test_create_pet_invalid_status_value(pet_api):
     pet_id = 987650003
     payload = {
@@ -87,5 +86,3 @@ def test_create_pet_invalid_status_value(pet_api):
         # cleanup only if created
         cleanup = pet_api.delete(pet_id)
         assert cleanup.status_code in (200, 404)
-        
-        
